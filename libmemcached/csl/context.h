@@ -1,6 +1,6 @@
 /*  vim:expandtab:shiftwidth=2:tabstop=2:smarttab:
  * 
- *  Libmemcached library
+ *  Configure Scripting Language
  *
  *  Copyright (C) 2011 Data Differential, http://datadifferential.com/
  *  All rights reserved.
@@ -35,34 +35,91 @@
  *
  */
 
-#include <config.h>
+#pragma once
 
-#include <iostream>
+#include <libmemcached/csl/common.h>
+#include <libmemcached/csl/parser.h>
 
-#include <libmemcached/memcached.h>
-
-int main(int argc, char *argv[])
+class Context
 {
-
-  if (argc < 2)
+public:
+  Context(const char *option_string, size_t option_string_length, memcached_st *memc_arg,
+          memcached_return_t &rc_arg) :
+    previous_token(END),
+    scanner(NULL),
+    begin(NULL),
+    pos(0),
+    memc(NULL),
+    rc(rc_arg),
+    _is_server(false),
+    _end(false)
   {
-    std::cerr << "No arguments provided." << std::endl;
-    return EXIT_FAILURE;
+    _hostname[0]= 0;
+    buf= option_string;
+    length= option_string_length;
+    memc= memc_arg;
+    init_scanner();
+    rc= MEMCACHED_SUCCESS;
   }
 
-  for (int x= 1; x < argc; x++)
+  bool end()
   {
-    char buffer[BUFSIZ];
-    memcached_return_t rc;
-    rc= libmemcached_check_configuration(argv[x], strlen(argv[x]), buffer, sizeof(buffer));
-
-    if (rc != MEMCACHED_SUCCESS)
-    {
-      std::cerr << "Failed to parse argument #" << x << " " << argv[x] << std::endl;
-      std::cerr << buffer << std::endl;
-      return EXIT_FAILURE;
-    }
+    return _end;
   }
 
-  return EXIT_SUCCESS;
-}
+  void start();
+
+  void set_end()
+  {
+    rc= MEMCACHED_SUCCESS;
+    _end= true;
+  }
+
+  void set_server()
+  {
+    _is_server= true;
+  }
+
+  void unset_server()
+  {
+    _is_server= false;
+  }
+
+  bool is_server()
+  {
+    return _is_server;
+  }
+
+  const char *set_hostname(const char *str, size_t size);
+
+  const char *hostname()
+  {
+    return _hostname;
+  }
+
+  void abort(const char *, yytokentype, const char *);
+  void error(const char *, yytokentype, const char* );
+
+  ~Context()
+  {
+    destroy_scanner();
+  }
+
+  yytokentype previous_token;
+  void *scanner;
+  const char *buf;
+  const char *begin;
+  size_t pos;
+  size_t length;
+  memcached_st *memc;
+  memcached_return_t &rc;
+
+protected:
+  void init_scanner();   
+  void destroy_scanner();
+
+private:
+  bool _is_server;
+  bool _end;
+  char _hostname[NI_MAXHOST];
+}; 
