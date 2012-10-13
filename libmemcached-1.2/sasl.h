@@ -1,9 +1,9 @@
 /*  vim:expandtab:shiftwidth=2:tabstop=2:smarttab:
  * 
- *  Libmemcached Client and Server 
+ *  Libmemcached library
  *
  *  Copyright (C) 2011 Data Differential, http://datadifferential.com/
- *  All rights reserved.
+ *  Copyright (C) 2006-2009 Brian Aker All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are
@@ -35,33 +35,36 @@
  *
  */
 
-#include <config.h>
-#include <libtest/test.hpp>
+#pragma once
 
-using namespace libtest;
+#if defined(LIBMEMCACHED_WITH_SASL_SUPPORT) && LIBMEMCACHED_WITH_SASL_SUPPORT
+#include <sasl/sasl.h>
+#else
+#define sasl_callback_t void
+#endif
 
-#include <libmemcached-1.2/memcached.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#include <tests/server_add.h>
+LIBMEMCACHED_API
+void memcached_set_sasl_callbacks(memcached_st *ptr,
+                                  const sasl_callback_t *callbacks);
 
-test_return_t memcached_server_add_null_test(memcached_st*)
-{
-  memcached_st *memc= memcached_create(NULL);
+LIBMEMCACHED_API
+memcached_return_t  memcached_set_sasl_auth_data(memcached_st *ptr,
+                                                 const char *username,
+                                                 const char *password);
 
-  test_compare(MEMCACHED_SUCCESS, memcached_server_add(memc, NULL, 0));
+LIBMEMCACHED_API
+memcached_return_t memcached_destroy_sasl_auth_data(memcached_st *ptr);
 
-  memcached_free(memc);
 
-  return TEST_SUCCESS;
+LIBMEMCACHED_API
+sasl_callback_t *memcached_get_sasl_callbacks(memcached_st *ptr);
+
+#ifdef __cplusplus
 }
+#endif
 
-test_return_t memcached_server_add_empty_test(memcached_st*)
-{
-  memcached_st *memc= memcached_create(NULL);
-
-  test_compare(MEMCACHED_SUCCESS, memcached_server_add(memc, "", 0));
-
-  memcached_free(memc);
-
-  return TEST_SUCCESS;
-}
+#include <libmemcached-1.2/struct/sasl.h>

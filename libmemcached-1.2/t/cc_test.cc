@@ -1,9 +1,8 @@
 /*  vim:expandtab:shiftwidth=2:tabstop=2:smarttab:
  * 
- *  Libmemcached library
+ *  Libmemcached C++ test app
  *
  *  Copyright (C) 2011 Data Differential, http://datadifferential.com/
- *  Copyright (C) 2006-2009 Brian Aker All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are
@@ -35,55 +34,29 @@
  *
  */
 
-#include <config.h>
+/*
+ * @file @brief C dummy test, aka testing C linking, etc
+ */
 
-#include <sys/types.h>
+#include <cstdlib>
 
-#include <example/byteorder.h>
+#include <libmemcached-1.2/memcached.h>
 
-/* Byte swap a 64-bit number. */
-#ifndef swap64
-static inline uint64_t swap64(uint64_t in)
+int main(void)
 {
-#ifndef WORDS_BIGENDIAN
-  /* Little endian, flip the bytes around until someone makes a faster/better
-   * way to do this. */
-  uint64_t rv= 0;
-  for (uint8_t x= 0; x < 8; x++)
+  (void)memcached_success(MEMCACHED_SUCCESS);
+  (void)memcached_failed(MEMCACHED_SUCCESS);
+  (void)memcached_continue(MEMCACHED_SUCCESS);
+
+  memcached_st *memc= memcached_create(NULL);
+
+  if (memc == NULL)
   {
-    rv= (rv << 8) | (in & 0xff);
-    in >>= 8;
+    return EXIT_FAILURE;
   }
-  return rv;
-#else
-  /* big-endian machines don't need byte swapping */
-  return in;
-#endif // WORDS_BIGENDIAN
-}
-#endif
 
-#ifdef HAVE_HTONLL
+  memcached_free(memc);
 
-uint64_t example_ntohll(uint64_t value)
-{
-  return ntohll(value);
+  return EXIT_SUCCESS;
 }
 
-uint64_t example_htonll(uint64_t value)
-{
-  return htonll(value);
-}
-
-#else // HAVE_HTONLL
-
-uint64_t example_ntohll(uint64_t value)
-{
-  return swap64(value);
-}
-
-uint64_t example_htonll(uint64_t value)
-{
-  return swap64(value);
-}
-
-#endif // HAVE_HTONLL

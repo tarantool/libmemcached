@@ -1,9 +1,9 @@
 /*  vim:expandtab:shiftwidth=2:tabstop=2:smarttab:
  * 
- *  Memcached Light interface definitions
+ *  Libmemcached library
  *
- *  Copyright (C) 2012 Data Differential, http://datadifferential.com/
- *  All rights reserved.
+ *  Copyright (C) 2011 Data Differential, http://datadifferential.com/
+ *  Copyright (C) 2006-2009 Brian Aker All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are
@@ -35,10 +35,12 @@
  *
  */
 
-/* -*- Mode: C; tab-width: 2; c-basic-offset: 2; indent-tabs-mode: nil -*- */
 #pragma once
 
-#include "util/log.hpp"
+#include <libmemcached-1.2/memcached.h>
 
-void initialize_interface_v0_handler(datadifferential::util::log_info_st&);
-void initialize_interface_v1_handler(datadifferential::util::log_info_st&);
+#include <libmemcachedutil-1.2/pid.h>
+#include <libmemcachedutil-1.2/flush.h>
+#include <libmemcachedutil-1.2/ping.h>
+#include <libmemcachedutil-1.2/pool.h>
+#include <libmemcachedutil-1.2/version.h>
