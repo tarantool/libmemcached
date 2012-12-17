@@ -2,8 +2,8 @@
  * 
  *  Libmemcached library
  *
- *  Copyright (C) 2011-2012 Data Differential, http://datadifferential.com/
- *  Copyright (C) 2006-2009 Brian Aker All rights reserved.
+ *  Copyright (C) 2011 Data Differential, http://datadifferential.com/ 
+ *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are
@@ -37,64 +37,26 @@
 
 #pragma once
 
-#include "libmemcached/string.hpp"
+#ifdef __cplusplus
+struct Result;
+#endif
 
-struct Result {
+struct memcached_result_st
+{
   struct {
     bool is_allocated;
     bool is_initialized;
   } options;
-  uint32_t item_flags;
-  time_t item_expiration;
-  size_t key_length;
-  uint64_t item_cas;
-  struct memcached_st *root;
-  memcached_string_st value;
-  uint64_t numeric_value;
-  uint64_t count;
-  char item_key[MEMCACHED_MAX_KEY];
-  /* Add result callback function */
-
-  Result(memcached_result_st* shell_, const struct memcached_st* memc_) :
-    item_flags(0),
-    item_expiration(0),
-    key_length(0),
-    item_cas(0),
-    root(const_cast<memcached_st*>(memc_)),
-    numeric_value(UINT64_MAX),
-    count(0),
-    _shell(shell_)
+  void *_impl;
+#ifdef __cplusplus
+  struct Result* impl() const
   {
-    item_key[0]= 0;
-
-    if (shell_)
-    {
-      memcached_set_allocated(_shell, false);
-    }
-    else
-    {
-      _shell= &_owned_shell;
-      memcached_set_allocated(_shell, true);
-    }
-
-    _shell->impl(this);
-    memcached_set_initialized(_shell, true);
-
-    memcached_string_create((memcached_st*)root, &value, 0);
+    return (Result*)(_impl);
   }
 
-  ~Result()
+  void impl(Result* impl_)
   {
+    _impl= impl_;
   }
-
-  memcached_result_st* shell()
-  {
-    return _shell;
-  }
-
-private:
-  memcached_result_st* _shell;
-  memcached_result_st _owned_shell;
+#endif
 };
-
-void memcached_result_reset_value(memcached_result_st *ptr);
