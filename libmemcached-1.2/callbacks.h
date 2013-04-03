@@ -2,7 +2,8 @@
  * 
  *  Libmemcached library
  *
- *  Copyright (C) 2011 Data Differential, http://datadifferential.com/
+ *  Copyright (C) 2011 Data Differential, http://datadifferential.com/ 
+ *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are
@@ -36,12 +37,17 @@
 
 #pragma once
 
-memcached_instance_st* memcached_instance_list(const memcached_st *);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-uint32_t memcached_instance_list_count(const memcached_st*);
+typedef memcached_return_t (*memcached_execute_fn)(const memcached_st *ptr, memcached_result_st *result, void *context);
+typedef memcached_return_t (*memcached_server_fn)(const memcached_st *ptr, const memcached_instance_st * server, void *context);
+typedef memcached_return_t (*memcached_stat_fn)(const memcached_instance_st * server,
+                                                const char *key, size_t key_length,
+                                                const char *value, size_t value_length,
+                                                void *context);
 
-uint32_t memcached_servers_set_count(memcached_server_list_st servers, uint32_t count);
-
-void memcached_instance_list_free(memcached_instance_st* self, uint32_t count);
-
-void memcached_instance_set(memcached_st*, memcached_instance_st*, const uint32_t host_list_size);
+#ifdef __cplusplus
+}
+#endif

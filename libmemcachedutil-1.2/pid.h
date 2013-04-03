@@ -36,12 +36,23 @@
 
 #pragma once
 
-memcached_instance_st* memcached_instance_list(const memcached_st *);
+#ifndef _WIN32
+# include <netdb.h>
+#endif
 
-uint32_t memcached_instance_list_count(const memcached_st*);
+#include <sys/types.h>
 
-uint32_t memcached_servers_set_count(memcached_server_list_st servers, uint32_t count);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void memcached_instance_list_free(memcached_instance_st* self, uint32_t count);
+LIBMEMCACHED_API
+pid_t libmemcached_util_getpid(const char *hostname, in_port_t port, memcached_return_t *ret);
 
-void memcached_instance_set(memcached_st*, memcached_instance_st*, const uint32_t host_list_size);
+LIBMEMCACHED_API
+pid_t libmemcached_util_getpid2(const char *hostname, in_port_t port, const char *username, const char *password,  memcached_return_t *ret);
+
+#ifdef __cplusplus
+}
+#endif
+
