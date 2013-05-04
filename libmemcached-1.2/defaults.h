@@ -1,8 +1,9 @@
 /*  vim:expandtab:shiftwidth=2:tabstop=2:smarttab:
+ * 
+ *  Libmemcached library
  *
- *  Data Differential YATL (i.e. libtest)  library
- *
- *  Copyright (C) 2012 Data Differential, http://datadifferential.com/
+ *  Copyright (C) 2011 Data Differential, http://datadifferential.com/ 
+ *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are
@@ -34,25 +35,22 @@
  *
  */
 
+
 #pragma once
 
-namespace libtest {
+/* Public defines */
+#define MEMCACHED_DEFAULT_PORT 11211
+#define MEMCACHED_DEFAULT_PORT_STRING "11211"
+#define MEMCACHED_POINTS_PER_SERVER 100
+#define MEMCACHED_POINTS_PER_SERVER_KETAMA 160
+#define MEMCACHED_CONTINUUM_SIZE MEMCACHED_POINTS_PER_SERVER*100 /* This would then set max hosts to 100 */
+#define MEMCACHED_STRIDE 4
+#define MEMCACHED_DEFAULT_TIMEOUT 5000
+#define MEMCACHED_DEFAULT_CONNECT_TIMEOUT 4000
+#define MEMCACHED_CONTINUUM_ADDITION 10 /* How many extra slots we should build for in the continuum */
+#define MEMCACHED_EXPIRATION_NOT_ADD 0xffffffffU
+#define MEMCACHED_SERVER_FAILURE_LIMIT 5
+#define MEMCACHED_SERVER_FAILURE_RETRY_TIMEOUT 2
+#define MEMCACHED_SERVER_FAILURE_DEAD_TIMEOUT 0
 
-class fatal : public __test_result
-{
-public:
-  fatal(const char *file, int line, const char *func, ...);
 
-  fatal(const fatal&);
-
-  // The following are just for unittesting the exception class
-  static bool is_disabled() throw();
-  static void disable() throw();
-  static void enable() throw();
-  static uint32_t disabled_counter() throw();
-  static void increment_disabled_counter() throw();
-
-private:
-};
-
-} // namespace libtest

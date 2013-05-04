@@ -38,19 +38,50 @@
 
 namespace libtest {
 
-class __failure : public __test_result
+class fatal : public libtest::exception
 {
 public:
-  __failure(const char *file, int line, const char *func, ...);
+  fatal(const char *file, int line, const char *func, ...);
 
-  __failure(const __failure&);
+  fatal(const fatal&);
+
+  // The following are just for unittesting the exception class
+  static bool is_disabled() throw();
+  static void disable() throw();
+  static void enable() throw();
+  static uint32_t disabled_counter() throw();
+  static void increment_disabled_counter() throw();
 
   test_return_t return_code() const
   {
-    return TEST_FAILURE;
+    return TEST_SKIPPED;
   }
 
 private:
 };
 
 } // namespace libtest
+
+#define FATAL(...) \
+do \
+{ \
+  throw libtest::fatal(LIBYATL_DEFAULT_PARAM, __VA_ARGS__); \
+} while (0)
+
+#define FATAL_IF(__expression, ...) \
+do \
+{ \
+  if ((__expression)) { \
+    throw libtest::fatal(LIBYATL_DEFAULT_PARAM, (#__expression)); \
+  } \
+} while (0)
+
+#define FATAL_IF_(__expression, ...) \
+do \
+{ \
+  if ((__expression)) { \
+    throw libtest::fatal(LIBYATL_DEFAULT_PARAM, __VA_ARGS__); \
+  } \
+} while (0)
+
+#define fatal_assert(__assert) if((__assert)) {} else { throw libtest::fatal(LIBYATL_DEFAULT_PARAM, #__assert); }
