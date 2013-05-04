@@ -34,53 +34,86 @@
  *
  */
 
-#pragma once
-
-#include <stdexcept>
+#include "libtest/yatlcon.h"
+#include <libtest/common.h>
+#include "libtest/exception.hpp"
+#include <cstdarg>
 
 namespace libtest {
 
-class disconnected : public std::runtime_error
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+
+fatal::fatal(const char *file_arg, int line_arg, const char *func_arg, ...) :
+  libtest::exception(file_arg, line_arg, func_arg)
 {
-public:
-  disconnected(const char *file, int line, const char *func, const std::string&, const in_port_t port, ...);
+  va_list args;
+  va_start(args, func_arg);
+  init(args);
+  va_end(args);
+}
 
-  const char* what() const throw()
+fatal::fatal( const fatal& other ) :
+  libtest::exception(other)
+{
+}
+
+static bool _disabled= false;
+static uint32_t _counter= 0;
+
+bool fatal::is_disabled() throw()
+{
+  return _disabled;
+}
+
+void fatal::disable() throw()
+{
+  _counter= 0;
+  _disabled= true;
+}
+
+void fatal::enable() throw()
+{
+  _counter= 0;
+  _disabled= false;
+}
+
+uint32_t fatal::disabled_counter() throw()
+{
+  return _counter;
+}
+
+void fatal::increment_disabled_counter() throw()
+{
+  _counter++;
+}
+
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+disconnected::disconnected(const char *file_arg, int line_arg, const char *func_arg,
+                           const std::string& instance, const in_port_t port, ...) :
+  libtest::exception(file_arg, line_arg, func_arg),
+  _port(port)
+{
+  va_list args;
+  va_start(args, port);
+  const char *format= va_arg(args, const char *);
+  char last_error[BUFSIZ];
+  (void)vsnprintf(last_error, sizeof(last_error), format, args);
+  va_end(args);
+
+  char buffer_error[BUFSIZ];
+  int error_length= snprintf(buffer_error, sizeof(buffer_error), "%s:%u %s", instance.c_str(), uint32_t(port), last_error);
+
+  if (error_length > 0)
   {
-    return _error_message;
+    what(size_t(error_length), buffer_error);
   }
+}
 
-  disconnected(const disconnected&);
-
-  // The following are just for unittesting the exception class
-  static bool is_disabled();
-  static void disable();
-  static void enable();
-  static uint32_t disabled_counter();
-  static void increment_disabled_counter();
-
-  int line() const
-  {
-    return _line;
-  }
-
-  const char* file() const
-  {
-    return _file;
-  }
-
-  const char* func() const
-  {
-    return _func;
-  }
-
-private:
-  char _error_message[BUFSIZ];
-  in_port_t _port;
-  char _instance[BUFSIZ];
-  int _line;
-  const char*  _file;
-  const char* _func;
-};
+disconnected::disconnected(const disconnected& other):
+  libtest::exception(other),
+  _port(other._port)
+{
+  strncpy(_instance, other._instance, BUFSIZ);
+}
 
 } // namespace libtest
