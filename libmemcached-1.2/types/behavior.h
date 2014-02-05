@@ -38,63 +38,48 @@
 
 #pragma once
 
-#ifdef HAVE_NETDB_H
-# include <netdb.h>
-#endif
-
-#ifdef NI_MAXHOST
-# define MEMCACHED_NI_MAXHOST NI_MAXHOST
-#else
-# define MEMCACHED_NI_MAXHOST 1025
-#endif
-
-#ifdef NI_MAXSERV
-# define MEMCACHED_NI_MAXSERV NI_MAXSERV
-#else
-# define MEMCACHED_NI_MAXSERV 32
-#endif
-
-enum memcached_server_state_t {
-  MEMCACHED_SERVER_STATE_NEW, // fd == -1, no address lookup has been done
-  MEMCACHED_SERVER_STATE_ADDRINFO, // ADDRRESS information has been gathered
-  MEMCACHED_SERVER_STATE_IN_PROGRESS,
-  MEMCACHED_SERVER_STATE_CONNECTED,
-  MEMCACHED_SERVER_STATE_IN_TIMEOUT,
-  MEMCACHED_SERVER_STATE_DISABLED
+enum memcached_behavior_t {
+  MEMCACHED_BEHAVIOR_NO_BLOCK,
+  MEMCACHED_BEHAVIOR_TCP_NODELAY,
+  MEMCACHED_BEHAVIOR_HASH,
+  MEMCACHED_BEHAVIOR_KETAMA,
+  MEMCACHED_BEHAVIOR_SOCKET_SEND_SIZE,
+  MEMCACHED_BEHAVIOR_SOCKET_RECV_SIZE,
+  MEMCACHED_BEHAVIOR_CACHE_LOOKUPS,
+  MEMCACHED_BEHAVIOR_SUPPORT_CAS,
+  MEMCACHED_BEHAVIOR_POLL_TIMEOUT,
+  MEMCACHED_BEHAVIOR_DISTRIBUTION,
+  MEMCACHED_BEHAVIOR_BUFFER_REQUESTS,
+  MEMCACHED_BEHAVIOR_USER_DATA,
+  MEMCACHED_BEHAVIOR_SORT_HOSTS,
+  MEMCACHED_BEHAVIOR_VERIFY_KEY,
+  MEMCACHED_BEHAVIOR_CONNECT_TIMEOUT,
+  MEMCACHED_BEHAVIOR_RETRY_TIMEOUT,
+  MEMCACHED_BEHAVIOR_KETAMA_WEIGHTED,
+  MEMCACHED_BEHAVIOR_KETAMA_HASH,
+  MEMCACHED_BEHAVIOR_BINARY_PROTOCOL,
+  MEMCACHED_BEHAVIOR_SND_TIMEOUT,
+  MEMCACHED_BEHAVIOR_RCV_TIMEOUT,
+  MEMCACHED_BEHAVIOR_SERVER_FAILURE_LIMIT,
+  MEMCACHED_BEHAVIOR_IO_MSG_WATERMARK,
+  MEMCACHED_BEHAVIOR_IO_BYTES_WATERMARK,
+  MEMCACHED_BEHAVIOR_IO_KEY_PREFETCH,
+  MEMCACHED_BEHAVIOR_HASH_WITH_PREFIX_KEY,
+  MEMCACHED_BEHAVIOR_NOREPLY,
+  MEMCACHED_BEHAVIOR_USE_UDP,
+  MEMCACHED_BEHAVIOR_AUTO_EJECT_HOSTS,
+  MEMCACHED_BEHAVIOR_NUMBER_OF_REPLICAS,
+  MEMCACHED_BEHAVIOR_RANDOMIZE_REPLICA_READ,
+  MEMCACHED_BEHAVIOR_CORK,
+  MEMCACHED_BEHAVIOR_TCP_KEEPALIVE,
+  MEMCACHED_BEHAVIOR_TCP_KEEPIDLE,
+  MEMCACHED_BEHAVIOR_LOAD_FROM_FILE,
+  MEMCACHED_BEHAVIOR_REMOVE_FAILED_SERVERS,
+  MEMCACHED_BEHAVIOR_DEAD_TIMEOUT,
+  MEMCACHED_BEHAVIOR_SERVER_TIMEOUT_LIMIT,
+  MEMCACHED_BEHAVIOR_MAX
 };
 
-struct memcached_server_st {
-  struct {
-    bool is_allocated:1;
-    bool is_initialized:1;
-    bool is_shutting_down:1;
-    bool is_dead:1;
-  } options;
-  uint32_t number_of_hosts;
-  uint32_t cursor_active;
-  in_port_t port;
-  uint32_t io_bytes_sent; /* # bytes sent since last read */
-  uint32_t request_id;
-  uint32_t server_failure_counter;
-  uint64_t server_failure_counter_query_id;
-  uint32_t server_timeout_counter;
-  uint64_t server_timeout_counter_query_id;
-  uint32_t weight;
-  uint32_t version;
-  enum memcached_server_state_t state;
-  struct {
-    uint32_t read;
-    uint32_t write;
-    uint32_t timeouts;
-    size_t _bytes_read;
-  } io_wait_count;
-  uint8_t major_version; // Default definition of UINT8_MAX means that it has not been set.
-  uint8_t micro_version; // ditto, and note that this is the third, not second version bit
-  uint8_t minor_version; // ditto
-  memcached_connection_t type;
-  time_t next_retry;
-  struct memcached_st *root;
-  uint64_t limit_maxbytes;
-  struct memcached_error_t *error_messages;
-  char hostname[MEMCACHED_NI_MAXHOST];
-};
+#ifndef __cplusplus
+typedef enum memcached_behavior_t memcached_behavior_t;
+#endif
