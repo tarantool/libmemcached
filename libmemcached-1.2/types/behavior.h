@@ -1,9 +1,8 @@
 /*  vim:expandtab:shiftwidth=2:tabstop=2:smarttab:
  * 
- *  Libmemcached Client and Server 
+ *  Libmemcached library
  *
- *  Copyright (C) 2012 Data Differential, http://datadifferential.com/
- *  Copyright (C) 2006-2009 Brian Aker
+ *  Copyright (C) 2011 Data Differential, http://datadifferential.com/ 
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -39,68 +38,48 @@
 
 #pragma once
 
-#include "tests/libmemcached_test_container.h"
+enum memcached_behavior_t {
+  MEMCACHED_BEHAVIOR_NO_BLOCK,
+  MEMCACHED_BEHAVIOR_TCP_NODELAY,
+  MEMCACHED_BEHAVIOR_HASH,
+  MEMCACHED_BEHAVIOR_KETAMA,
+  MEMCACHED_BEHAVIOR_SOCKET_SEND_SIZE,
+  MEMCACHED_BEHAVIOR_SOCKET_RECV_SIZE,
+  MEMCACHED_BEHAVIOR_CACHE_LOOKUPS,
+  MEMCACHED_BEHAVIOR_SUPPORT_CAS,
+  MEMCACHED_BEHAVIOR_POLL_TIMEOUT,
+  MEMCACHED_BEHAVIOR_DISTRIBUTION,
+  MEMCACHED_BEHAVIOR_BUFFER_REQUESTS,
+  MEMCACHED_BEHAVIOR_USER_DATA,
+  MEMCACHED_BEHAVIOR_SORT_HOSTS,
+  MEMCACHED_BEHAVIOR_VERIFY_KEY,
+  MEMCACHED_BEHAVIOR_CONNECT_TIMEOUT,
+  MEMCACHED_BEHAVIOR_RETRY_TIMEOUT,
+  MEMCACHED_BEHAVIOR_KETAMA_WEIGHTED,
+  MEMCACHED_BEHAVIOR_KETAMA_HASH,
+  MEMCACHED_BEHAVIOR_BINARY_PROTOCOL,
+  MEMCACHED_BEHAVIOR_SND_TIMEOUT,
+  MEMCACHED_BEHAVIOR_RCV_TIMEOUT,
+  MEMCACHED_BEHAVIOR_SERVER_FAILURE_LIMIT,
+  MEMCACHED_BEHAVIOR_IO_MSG_WATERMARK,
+  MEMCACHED_BEHAVIOR_IO_BYTES_WATERMARK,
+  MEMCACHED_BEHAVIOR_IO_KEY_PREFETCH,
+  MEMCACHED_BEHAVIOR_HASH_WITH_PREFIX_KEY,
+  MEMCACHED_BEHAVIOR_NOREPLY,
+  MEMCACHED_BEHAVIOR_USE_UDP,
+  MEMCACHED_BEHAVIOR_AUTO_EJECT_HOSTS,
+  MEMCACHED_BEHAVIOR_NUMBER_OF_REPLICAS,
+  MEMCACHED_BEHAVIOR_RANDOMIZE_REPLICA_READ,
+  MEMCACHED_BEHAVIOR_CORK,
+  MEMCACHED_BEHAVIOR_TCP_KEEPALIVE,
+  MEMCACHED_BEHAVIOR_TCP_KEEPIDLE,
+  MEMCACHED_BEHAVIOR_LOAD_FROM_FILE,
+  MEMCACHED_BEHAVIOR_REMOVE_FAILED_SERVERS,
+  MEMCACHED_BEHAVIOR_DEAD_TIMEOUT,
+  MEMCACHED_BEHAVIOR_SERVER_TIMEOUT_LIMIT,
+  MEMCACHED_BEHAVIOR_MAX
+};
 
-static void *world_create(libtest::server_startup_st& servers, test_return_t& error)
-{
-  SKIP_UNLESS(libtest::has_libmemcached());
-
-  if (servers.sasl())
-  {
-    SKIP_UNLESS(libmemcached_has_feature(LIBMEMCACHED_FEATURE_HAS_SASL));
-
-    // Assume we are running under valgrind, and bail
-    if (getenv("LOG_COMPILER"))
-    {
-      error= TEST_SKIPPED;
-      return NULL;
-    }
-  }
-
-  for (uint32_t x= 0; x < servers.servers_to_run(); x++)
-  {
-    in_port_t port= libtest::get_free_port();
-
-    if (servers.sasl())
-    {
-      if (server_startup(servers, "memcached-sasl", port, NULL) == false)
-      {
-        error= TEST_SKIPPED;
-        return NULL;
-      }
-    }
-    else
-    {
-      if (server_startup(servers, "memcached", port, NULL) == false)
-      {
-        error= TEST_SKIPPED;
-        return NULL;
-      }
-    }
-  }
-
-  libmemcached_test_container_st *global_container= new libmemcached_test_container_st(servers);
-
-  return global_container;
-}
-
-static bool world_destroy(void *object)
-{
-  libmemcached_test_container_st *container= (libmemcached_test_container_st *)object;
-#if 0
-#if defined(LIBMEMCACHED_WITH_SASL_SUPPORT) && LIBMEMCACHED_WITH_SASL_SUPPORT
-  if (LIBMEMCACHED_WITH_SASL_SUPPORT)
-  {
-    sasl_done();
-  }
+#ifndef __cplusplus
+typedef enum memcached_behavior_t memcached_behavior_t;
 #endif
-#endif
-
-  delete container;
-
-  return TEST_SUCCESS;
-}
-
-typedef test_return_t (*libmemcached_test_callback_fn)(memcached_st *);
-
-#include "tests/runner.h"
