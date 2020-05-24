@@ -2,6 +2,7 @@
 
 ACLOCAL_AMFLAGS= -I m4 -I libtest/m4
 AM_YFLAGS= -d
+AM_LDFLAGS= -L/lib64 -lpthread
 
 # includes append to these:
 SUFFIXES =
