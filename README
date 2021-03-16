@@ -12,7 +12,7 @@ memslap - Load generation utility (benchmark!)
 
 The library is in production in many locations (upwards to 1000+ nodes).
 
-The project has information here: http://libmemcached.org/
+The project has information here: https://libmemcached.org/
 
 Documentation can be found here: http://docs.libmemcached.org/
 
@@ -25,17 +25,10 @@ actively support Linux, MacOSX, FreeBSD, and Solaris. A Windows port is
 currently not supported, but one is listed on the homepage that is supported
 by someone in the community.
 
-If you are looking for answers to your questions please check out the
-mailing list at:
-http://lists.libmemcached.org/  
-
 Subscription information for the libmemcached mailing list can be found there.
 
 Please report bugs here:
-https://bugs.launchpad.net/libmemcached/
-
-You can purchase support from:
-http://datadifferential.com/
+https://github.com/libmemcached/libmemcached/issues
 
 
 Cheers,

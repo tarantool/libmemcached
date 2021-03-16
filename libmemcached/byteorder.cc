@@ -38,6 +38,12 @@
 #include "mem_config.h"
 #include "libmemcached/byteorder.h"
 
+#if defined(__APPLE__)
+# include <arpa/inet.h>
+# include <machine/endian.h>
+# include <libkern/OSByteOrder.h>
+#endif
+
 /* Byte swap a 64-bit number. */
 #ifndef swap64
 static inline uint64_t swap64(uint64_t in)
@@ -62,7 +68,9 @@ static inline uint64_t swap64(uint64_t in)
 
 uint64_t memcached_ntohll(uint64_t value)
 {
-#ifdef HAVE_HTONLL
+#if defined(__APPLE__) 
+  return OSSwapInt64(value);
+#elif defined(HAVE_HTONLL)
   return ntohll(value);
 #else
   return swap64(value);

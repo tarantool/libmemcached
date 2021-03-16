@@ -10,9 +10,10 @@
 
 m4_include([version.m4])
 
-AC_PREREQ([2.61])
-AC_INIT([libmemcached],VERSION_NUMBER,[http://libmemcached.org/])
+AC_PREREQ([2.69])
+AC_INIT([libmemcached],[VERSION_NUMBER],[http://libmemcached.org/])
 
+# Must come before AM_INIT_AUTOMAKE.
 AC_CONFIG_AUX_DIR([build-aux])
 
 # Setup the compilers early on
