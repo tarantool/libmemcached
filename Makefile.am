@@ -26,9 +26,7 @@ EXTRA_DIST=
 dist_man_MANS=
 MAINTAINERCLEANFILES=
 
-if IS_VCS_CHECKOUT
 SUBDIRS= docs
-endif
 
 #includes additional rules from aminclude.am
 @INC_AMINCLUDE@
