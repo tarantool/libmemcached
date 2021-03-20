@@ -24,6 +24,8 @@ export DRD_COMMAND
 export SGCHECK_COMMAND
 export GDB_COMMAND
 
+.EXPORT_ALL_VARIABLES: ;
+
 valgrind:
 	@echo make check LOG_COMPILER="\"$(VALGRIND_EXEC_COMMAND)\""
 
