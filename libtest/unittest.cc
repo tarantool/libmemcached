@@ -618,14 +618,7 @@ static test_return_t application_doesnotexist_BINARY(void *)
   true_app.will_fail();
 
   const char *args[]= { "--fubar", 0 };
-#if defined(__APPLE__) && __APPLE__
   ASSERT_EQ(Application::INVALID_POSIX_SPAWN, true_app.run(args));
-#elif defined(__FreeBSD__) && __FreeBSD__
-  ASSERT_EQ(Application::INVALID_POSIX_SPAWN, true_app.run(args));
-#else
-  ASSERT_EQ(Application::SUCCESS, true_app.run(args));
-  ASSERT_EQ(Application::INVALID_POSIX_SPAWN, true_app.join());
-#endif
 
   test_zero(true_app.stdout_result().size());
 
