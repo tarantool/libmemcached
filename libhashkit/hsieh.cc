@@ -35,11 +35,14 @@
  *
  */
 
-/* By Paul Hsieh (C) 2004, 2005.  Covered under the Paul Hsieh
- * derivative license.
- * See: http://www.azillionmonkeys.com/qed/weblicense.html for license
- * details.
+/* Original code provided:
+ * Copyright: Paul Hsieh (C) LGPL 2.1 license
+ * See: 
  * http://www.azillionmonkeys.com/qed/hash.html
+ * http://www.azillionmonkeys.com/qed/weblicense.html
+ * or optionally
+ * Paul Hsieh OLD BSD license
+ * Copyright © 2010, Paul Hsieh All rights reserved.
 */
 
 #include <libhashkit/common.h>
