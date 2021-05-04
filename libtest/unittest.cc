@@ -882,12 +882,14 @@ static test_return_t number_of_cpus_TEST(void *)
   return TEST_SUCCESS;
 }
 
+#pragma GCC diagnostic ignored "-Wunused-function"
 static test_return_t check_dns_TEST(void *)
 {
   test_warn(libtest::check_dns(), "Broken DNS server/no DNS server found");
 
   return TEST_SUCCESS;
 }
+# pragma GCC diagnostic pop
 
 static test_return_t Timer_TEST(void *)
 {
@@ -1142,7 +1144,9 @@ test_st timer_TESTS[] ={
 test_st dns_TESTS[] ={
   {"libtest::lookup(true)", 0, lookup_true_TEST },
   {"libtest::lookup(false)", 0, lookup_false_TEST },
+#if 0
   {"libtest::check_dns()", 0, check_dns_TEST },
+#endif
   {0, 0, 0}
 };
 

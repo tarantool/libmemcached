@@ -320,6 +320,7 @@ static int get_password(sasl_conn_t *conn, void *context, int id,
   return SASL_OK;
 }
 
+#pragma GCC diagnostic ignored "-Wcast-function-type"
 memcached_return_t memcached_set_sasl_auth_data(memcached_st *shell,
                                                 const char *username,
                                                 const char *password)
@@ -377,6 +378,7 @@ memcached_return_t memcached_set_sasl_auth_data(memcached_st *shell,
 
   return MEMCACHED_SUCCESS;
 }
+#pragma GCC diagnostic pop
 
 memcached_return_t memcached_destroy_sasl_auth_data(memcached_st *shell)
 {
@@ -409,6 +411,7 @@ memcached_return_t memcached_destroy_sasl_auth_data(memcached_st *shell)
   return MEMCACHED_SUCCESS;
 }
 
+#pragma GCC diagnostic ignored "-Wcast-function-type"
 memcached_return_t memcached_clone_sasl(memcached_st *clone, const  memcached_st *source)
 {
   if (LIBMEMCACHED_WITH_SASL_SUPPORT == 0)
@@ -516,6 +519,7 @@ memcached_return_t memcached_clone_sasl(memcached_st *clone, const  memcached_st
 
   return MEMCACHED_SUCCESS;
 }
+#pragma GCC diagnostic pop
 
 #else
 
