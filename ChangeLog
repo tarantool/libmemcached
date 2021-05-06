@@ -1,3 +1,6 @@
+1.0.19
+* Remove checking for gearman in test framekwork
+
 1.0.18 Sun Feb  9 01:49:56 PST 2014
 * MEMCACHED_BEHAVIOR_RETRY_TIMEOUT can now be set to zero.
 * Numerous bug fixes.
