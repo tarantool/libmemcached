@@ -86,7 +86,9 @@ include m4/include.am
 endif
 
 TESTS += ${bin_PROGRAMS}
+if IS_VCS_CHECKOUT
 TESTS += ${check_PROGRAMS}
+endif
 XFAIL_TESTS += ${bin_PROGRAMS}
 
 if ! BUILD_WIN32
