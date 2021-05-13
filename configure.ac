@@ -97,16 +97,9 @@ LIBMEMCACHED_PROTOCOL
 # Adding support for libtest
 m4_include([libtest/yatl.m4])
 
-AM_CONDITIONAL([GEARMAND_BINARY],[false])
-AM_CONDITIONAL([HAVE_LIBGEARMAN],[false])
-AC_DEFINE([HAVE_LIBGEARMAN],[0],[Enables libgearman Support])
-
 AM_CONDITIONAL([BUILDING_LIBMEMCACHED],[true])
 AM_CONDITIONAL([HAVE_LIBMEMCACHED],[false])
-AM_CONDITIONAL([HAVE_LIBDRIZZLE],[false])
 AC_DEFINE([HAVE_LIBMEMCACHED],[1],[Enables libmemcached Support])
-
-AM_CONDITIONAL([BUILDING_GEARMAN],[false])
 
 # Specialty checks
 AX_CXX_CINTTYPES
@@ -273,11 +266,6 @@ AS_IF([test "x$ac_cv_header_atomic_h" = "xyes"],
       AS_IF([test "x$ac_cv_func_atomic_add_64" = "xyes" -a "x$ac_cv_func_atomic_add_32" = "xyes"],
             [AC_DEFINE([USE_ATOMIC_H],[1],[Define to true if you want to use functions from atomic.h])])])
 
-AC_DEFINE([HAVE_LIBDRIZZLE],[0],[Support for libdrizzle])
-AC_DEFINE([HAVE_DRIZZLED_BINARY],[0],[Support for DrizzleD])
-AC_DEFINE([DRIZZLED_BINARY],[0],[Support for DrizzleD])
-AC_DEFINE([GEARMAND_BLOBSLAP_WORKER],[0],[Support for Gearman Blobslap worker])
-AC_DEFINE([HAVE_LIBPQ],[0],[Support for Postgres])
 AC_DEFINE([HAVE_LIBCURL],[0],[Support for libcurl])
 
 # Check for the requirements for running memcached with less privileges

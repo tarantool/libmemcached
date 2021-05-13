@@ -44,10 +44,6 @@
 #include <libtest/memcached.hpp>
 #endif
 
-#if defined(HAVE_LIBGEARMAN) && HAVE_LIBGEARMAN
-#include <libgearman-1.0/ostream.hpp>
-#endif
-
 #ifndef __INTEL_COMPILER
 #pragma GCC diagnostic ignored "-Wnonnull-compare"
 #pragma GCC diagnostic ignored "-Waddress"

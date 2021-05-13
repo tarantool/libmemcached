@@ -235,7 +235,6 @@ tests_testudp_SOURCES+= tests/libmemcached-1.0/generate.cc
 tests_testudp_SOURCES+= tests/libmemcached-1.0/print.cc
 tests_testudp_SOURCES+= tests/mem_udp.cc
 tests_testudp_LDADD+= $(TESTS_LDADDS)
-check_PROGRAMS+= tests/testudp
 noinst_PROGRAMS+= tests/testudp
 
 test-udp: tests/testudp

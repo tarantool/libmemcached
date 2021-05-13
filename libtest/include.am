@@ -73,8 +73,6 @@ noinst_HEADERS+= libtest/exception.hpp
 noinst_HEADERS+= libtest/exception/disconnected.hpp
 noinst_HEADERS+= libtest/exception/fatal.hpp
 noinst_HEADERS+= libtest/framework.h
-noinst_HEADERS+= libtest/gearmand.h
-noinst_HEADERS+= libtest/drizzled.h
 noinst_HEADERS+= libtest/get.h
 noinst_HEADERS+= libtest/has.hpp
 noinst_HEADERS+= libtest/http.hpp
@@ -127,7 +125,6 @@ libtest_libtest_la_SOURCES+= libtest/core.cc
 libtest_libtest_la_SOURCES+= libtest/cpu.cc
 libtest_libtest_la_SOURCES+= libtest/dns.cc
 libtest_libtest_la_SOURCES+= libtest/dream.cc
-libtest_libtest_la_SOURCES+= libtest/drizzled.cc
 libtest_libtest_la_SOURCES+= libtest/exception.cc
 libtest_libtest_la_SOURCES+= libtest/exception/fatal.cc
 libtest_libtest_la_SOURCES+= libtest/formatter.cc
@@ -171,18 +168,7 @@ libtest_libtest_la_LDFLAGS=
 # We are either building in tree, or with
 libtest_libtest_la_SOURCES+= libtest/memcached.cc
 
-if HAVE_LIBDRIZZLE
-libtest_libtest_la_LDFLAGS+= @LIBDRIZZLE_LDFLAGS@
-libtest_libtest_la_LIBADD+= @LIBDRIZZLE_LIB@
-endif
-
-libtest_libtest_la_SOURCES+= libtest/gearmand.cc
-
-if BUILDING_GEARMAN
-libtest_libtest_la_SOURCES+= libtest/blobslap_worker.cc
-endif
-
-TMP_DIR := tmp_chroot/etc tmp_chroot/var/log tmp_chroot/var/tmp tmp_chroot/var/run tmp_chroot/var/drizzle
+TMP_DIR := tmp_chroot/etc tmp_chroot/var/log tmp_chroot/var/tmp tmp_chroot/var/run
 
 BUILT_SOURCES+= $(TMP_DIR)
 

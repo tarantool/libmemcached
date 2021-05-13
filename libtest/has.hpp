@@ -45,32 +45,11 @@ LIBTEST_API
 bool has_libmemcached();
 
 LIBTEST_API
-bool has_libdrizzle();
-
-LIBTEST_API
-bool has_postgres_support();
-
-LIBTEST_API
 bool has_memcached();
 
 LIBTEST_API
 bool has_memcached_sasl();
 
 LIBTEST_API
-bool has_gearmand();
-
-LIBTEST_API
-bool has_drizzled();
-
-LIBTEST_API
-bool has_mysqld();
-
-LIBTEST_API
 const char* memcached_binary();
-
-LIBTEST_API
-const char *gearmand_binary(); 
-
-LIBTEST_API
-const char *drizzled_binary();
 } // namespace libtest

@@ -64,90 +64,6 @@ bool has_libmemcached(void)
   return false;
 }
 
-bool has_libdrizzle(void)
-{
-#if defined(HAVE_LIBDRIZZLE) && HAVE_LIBDRIZZLE
-  if (HAVE_LIBDRIZZLE)
-  {
-    return true;
-  }
-#endif
-
-  return false;
-}
-
-bool has_postgres_support(void)
-{
-  char *getenv_ptr;
-  if (bool((getenv_ptr= getenv("POSTGES_IS_RUNNING_AND_SETUP"))))
-  {
-    (void)(getenv_ptr);
-    if (HAVE_LIBPQ)
-    {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-
-bool has_gearmand()
-{
-#if defined(GEARMAND_BINARY) && defined(HAVE_GEARMAND_BINARY) && HAVE_GEARMAND_BINARY
-  if (HAVE_GEARMAND_BINARY)
-  {
-    std::stringstream arg_buffer;
-
-    char *getenv_ptr;
-    if (bool((getenv_ptr= getenv("PWD"))) and 
-        ((strcmp(GEARMAND_BINARY, "./gearmand/gearmand") == 0) or (strcmp(GEARMAND_BINARY, "gearmand/gearmand") == 0)))
-    {
-      arg_buffer << getenv_ptr;
-      arg_buffer << "/";
-    }
-    arg_buffer << GEARMAND_BINARY;
-
-    if (access(arg_buffer.str().c_str(), X_OK) == 0)
-    {
-      return true;
-    }
-  }
-#endif
-
-  return false;
-}
-
-bool has_drizzled()
-{
-#if defined(DRIZZLED_BINARY) && defined(HAVE_DRIZZLED_BINARY) && HAVE_DRIZZLED_BINARY
-  if (HAVE_DRIZZLED_BINARY)
-  {
-    if (access(DRIZZLED_BINARY, X_OK) == 0)
-    {
-      return true;
-    }
-  }
-#endif
-
-  return false;
-}
-
-bool has_mysqld()
-{
-#if defined(MYSQLD_BINARY) && defined(HAVE_MYSQLD_BUILD) && HAVE_MYSQLD_BUILD
-  if (HAVE_MYSQLD_BUILD)
-  {
-    if (access(MYSQLD_BINARY, X_OK) == 0)
-    {
-      return true;
-    }
-  }
-#endif
-
-  return false;
-}
-
 static char memcached_binary_path[FILENAME_MAX];
 
 static void initialize_memcached_binary_path()
@@ -207,24 +123,6 @@ const char* memcached_binary()
   }
 
   return NULL;
-}
-
-const char *gearmand_binary() 
-{
-#if defined(GEARMAND_BINARY)
-  return GEARMAND_BINARY;
-#else
-  return NULL;
-#endif
-}
-
-const char *drizzled_binary() 
-{
-#if defined(DRIZZLED_BINARY)
-  return DRIZZLED_BINARY;
-#else
-  return NULL;
-#endif
 }
 
 } // namespace libtest

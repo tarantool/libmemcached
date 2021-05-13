@@ -42,10 +42,6 @@
 # include <libmemcached-1.0/types/return.h>
 #endif
 
-#if defined(HAVE_LIBGEARMAN_1_0_RETURN_H) && HAVE_LIBGEARMAN_1_0_RETURN_H
-# include <libgearman-1.0/return.h>
-#endif
-
 #include <cstdlib>
 #include <unistd.h>
 
@@ -349,12 +345,6 @@ static test_return_t var_log_exists_test(void *)
   return TEST_SUCCESS;
 }
 
-static test_return_t var_drizzle_exists_test(void *)
-{
-  ASSERT_EQ(0, access("var/drizzle", R_OK | W_OK | X_OK));
-  return TEST_SUCCESS;
-}
-
 static test_return_t var_tmp_test(void *)
 {
   FILE *file= fopen("var/tmp/junk", "w+");
@@ -379,14 +369,6 @@ static test_return_t var_log_test(void *)
   return TEST_SUCCESS;
 }
 
-static test_return_t var_drizzle_test(void *)
-{
-  FILE *file= fopen("var/drizzle/junk", "w+");
-  test_true(file);
-  fclose(file);
-  return TEST_SUCCESS;
-}
-
 static test_return_t var_tmp_rm_test(void *)
 {
   test_true(unlink("var/tmp/junk") == 0);
@@ -405,12 +387,6 @@ static test_return_t var_log_rm_test(void *)
   return TEST_SUCCESS;
 }
 
-static test_return_t var_drizzle_rm_test(void *)
-{
-  test_true(unlink("var/drizzle/junk") == 0);
-  return TEST_SUCCESS;
-}
-
 static test_return_t _compare_test_return_t_test(void *)
 {
   ASSERT_EQ(TEST_SUCCESS, TEST_SUCCESS);
@@ -424,44 +400,6 @@ static test_return_t _compare_memcached_return_t_test(void *)
 #if defined(HAVE_LIBMEMCACHED_1_0_TYPES_RETURN_H) && HAVE_LIBMEMCACHED_1_0_TYPES_RETURN_H
   ASSERT_EQ(MEMCACHED_SUCCESS, MEMCACHED_SUCCESS);
 #endif
-
-  return TEST_SUCCESS;
-}
-
-static test_return_t _compare_gearman_return_t_test(void *)
-{
-  test_skip(HAVE_LIBGEARMAN, true);
-#if defined(HAVE_LIBGEARMAN_1_0_RETURN_H) && HAVE_LIBGEARMAN_1_0_RETURN_H
-  ASSERT_EQ(GEARMAN_SUCCESS, GEARMAN_SUCCESS);
-#endif
-
-  return TEST_SUCCESS;
-}
-
-static test_return_t drizzled_cycle_test(void *object)
-{
-  server_startup_st *servers= (server_startup_st*)object;
-  test_true(servers and servers->validate());
-
-#if defined(HAVE_GEARMAND_BINARY) && HAVE_GEARMAND_BINARY
-  test_true(has_drizzled());
-#endif
-
-  test_skip(true, has_drizzled());
-
-  test_skip(true, server_startup(*servers, "drizzled", get_free_port(), NULL));
-
-  return TEST_SUCCESS;
-}
-
-static test_return_t gearmand_cycle_test(void *object)
-{
-  server_startup_st *servers= (server_startup_st*)object;
-  test_true(servers and servers->validate());
-
-  test_skip(true, has_gearmand());
-  test_skip(true, server_startup(*servers, "gearmand", get_free_port(), NULL));
-  servers->clear();
 
   return TEST_SUCCESS;
 }
@@ -961,54 +899,6 @@ static test_return_t check_for_VALGRIND(void *)
   return TEST_SUCCESS;
 }
 
-static test_return_t check_for_gearman(void *)
-{
-  test_skip(true, HAVE_LIBGEARMAN);
-  test_skip(true, has_gearmand());
-#if defined(HAVE_GEARMAND_BINARY) && HAVE_GEARMAND_BINARY
-  if (GEARMAND_BINARY)
-  {
-    if (strcmp(GEARMAND_BINARY, "./gearmand/gearmand"))
-    {
-      test_zero(access(GEARMAND_BINARY, X_OK ));
-    }
-  }
-  else
-  {
-    return TEST_SKIPPED;
-  }
-#endif
-
-  testing_service= "gearmand";
-
-  return TEST_SUCCESS;
-}
-
-static test_return_t check_for_drizzle(void *)
-{
-  test_skip(true, has_drizzled());
-
-  testing_service= "drizzled";
-
-  return TEST_SUCCESS;
-}
-
-
-test_st drizzled_tests[] ={
-  {"drizzled startup-shutdown", 0, drizzled_cycle_test },
-  {0, 0, 0}
-};
-
-test_st gearmand_tests[] ={
-#if 0
-  {"pause", 0, pause_test },
-#endif
-  {"gearmand startup-shutdown", 0, gearmand_cycle_test },
-  {"_compare(gearman_return_t)", 0, _compare_gearman_return_t_test },
-  {"server_startup(fail)", 0, server_startup_fail_TEST },
-  {0, 0, 0}
-};
-
 static test_return_t clear_servers(void* object)
 {
   server_startup_st *servers= (server_startup_st*)object;
@@ -1083,15 +973,12 @@ test_st directories_tests[] ={
   {"var/tmp exists", 0, var_tmp_exists_test },
   {"var/run exists", 0, var_run_exists_test },
   {"var/log exists", 0, var_log_exists_test },
-  {"var/drizzle exists", 0, var_drizzle_exists_test },
   {"var/tmp", 0, var_tmp_test },
   {"var/run", 0, var_run_test },
   {"var/log", 0, var_log_test },
-  {"var/drizzle", 0, var_drizzle_test },
   {"var/tmp rm", 0, var_tmp_rm_test },
   {"var/run rm", 0, var_run_rm_test },
   {"var/log rm", 0, var_log_rm_test },
-  {"var/drizzle rm", 0, var_drizzle_rm_test },
   {0, 0, 0}
 };
 
@@ -1198,9 +1085,7 @@ collection_st collection[] ={
   {"local", 0, 0, local_log},
   {"directories", 0, 0, directories_tests},
   {"comparison", 0, 0, comparison_tests},
-  {"gearmand", check_for_gearman, clear_servers, gearmand_tests},
   {"memcached", check_for_memcached, clear_servers, memcached_TESTS },
-  {"drizzled", check_for_drizzle, clear_servers, drizzled_tests},
   {"cmdline", 0, 0, cmdline_tests},
   {"application", 0, 0, application_tests},
   {"http", check_for_curl, 0, http_tests},

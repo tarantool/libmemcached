@@ -205,39 +205,6 @@ libtest::Server* server_startup_st::create(const std::string& server_type, in_po
       return NULL;
     }
   }
-  else if (server_type.compare("gearmand") == 0)
-  {
-    server= build_gearmand("localhost", try_port);
-  }
-  else if (server_type.compare("hostile-gearmand") == 0)
-  {
-    server= build_gearmand("localhost", try_port, "gearmand/hostile_gearmand");
-  }
-  else if (server_type.compare("drizzled") == 0)
-  {
-    if (has_drizzled())
-    {
-      if (has_libdrizzle())
-      {
-        server= build_drizzled("localhost", try_port);
-      }
-    }
-  }
-  else if (server_type.compare("blobslap_worker") == 0)
-  {
-    if (has_gearmand())
-    {
-#ifdef GEARMAND_BLOBSLAP_WORKER
-      if (GEARMAND_BLOBSLAP_WORKER)
-      {
-        if (HAVE_LIBGEARMAN)
-        {
-          server= build_blobslap_worker(try_port);
-        }
-      }
-#endif // GEARMAND_BLOBSLAP_WORKER
-    }
-  }
   else if (server_type.compare("memcached") == 0)
   {
     if (has_memcached())
