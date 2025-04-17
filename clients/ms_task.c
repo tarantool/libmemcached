@@ -75,6 +75,9 @@ static void ms_send_signal(ms_sync_lock_t *sync_lock);
 static void ms_warmup_server(ms_conn_t *c);
 static int ms_run_getset_task(ms_conn_t *c);
 
+ms_global_t ms_global;
+ms_stats_t ms_stats;
+ms_statistic_t ms_statistic;
 
 /**
  * used to get the current operation item(object)

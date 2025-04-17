@@ -185,6 +185,9 @@ set_VENDOR_DISTRIBUTION ()
     ubuntu)
       VENDOR_DISTRIBUTION='ubuntu'
       ;;
+    linuxmint)
+      VENDOR_DISTRIBUTION='ubuntu'
+      ;;
     suse)
       VENDOR_DISTRIBUTION='opensuse'
       ;;
@@ -300,6 +303,9 @@ set_VENDOR ()
       VENDOR='canonical'
       ;;
     ubuntu)
+      VENDOR='canonical'
+      ;;
+    linuxmint)
       VENDOR='canonical'
       ;;
     debian)
